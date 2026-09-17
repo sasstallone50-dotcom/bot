@@ -1,0 +1,34 @@
+import asyncio
+from aiogram import Bot, Dispatcher, F
+from aiogram.filters import CommandStart
+from aiogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton
+
+BOT_TOKEN = "8739415578:AAG_uPHq2ELm_u3W5_TBipMGz_HGHwvMjFQ"
+
+bot = Bot(token=BOT_TOKEN)
+dp = Dispatcher()
+
+main_keyboard = InlineKeyboardMarkup(
+    inline_keyboard=[
+        [InlineKeyboardButton(text="📢 Мой Telegram-канал", url="https://t.me/grenev22")],
+        [InlineKeyboardButton(text="🌐 Мой сайт-визитка", url="https://sasstallone50-dotcom.github.io/site/")],
+        [InlineKeyboardButton(text="✉️ Написать лично", url="https://t.me/stallone55")]
+    ]
+)
+
+@dp.message(CommandStart())
+async def handle_start(message: Message):
+    user_name = message.from_user.first_name
+    text = f"Привет, {user_name}! 👋\n\nЯ официальный бот-помощник Grebnev_22.\nЗдесь собраны все важные проекты и ссылки автора.\n\nВыбирай нужный раздел ниже 👇"
+    await message.answer(text=text, reply_markup=main_keyboard)
+
+@dp.message(F.text)
+async def handle_any_text(message: Message):
+    await message.answer("Я пока ещё учусь! Чтобы открыть меню со всеми ссылками, нажми /start", reply_markup=main_keyboard)
+
+async def main():
+    print("Бот успешно запущен и ждёт сообщений...")
+    await dp.start_polling(bot)
+
+if __name__ == "__main__":
+    asyncio.run(main())
